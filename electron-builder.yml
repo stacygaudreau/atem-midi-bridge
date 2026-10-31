@@ -1,0 +1,30 @@
+appId: com.stacygaudreau.atem-midi-bridge
+productName: ATEM MIDI Bridge
+copyright: Copyright © 2026 Stacy Gaudreau
+
+directories:
+  output: release/${version}
+  buildResources: build
+
+files:
+  - out/**/*
+  - package.json
+
+asarUnpack:
+  - node_modules/@julusian/**
+
+# Native deps use N-API prebuilds that already load in Electron.
+npmRebuild: false
+
+win:
+  target:
+    - nsis
+    - portable
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  artifactName: ATEM-MIDI-Bridge-${version}-setup.${ext}
+
+portable:
+  artifactName: ATEM-MIDI-Bridge-${version}-portable.${ext}

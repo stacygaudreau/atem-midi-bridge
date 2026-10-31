@@ -60,6 +60,10 @@ export class AtemService extends EventEmitter<AtemServiceEvents> {
       this.latestMasterLevel = null
       this.latestSourceLevels.clear()
       this.emitStatus()
+      this.emit('recording-changed', this.getRecordingStatus())
+      this.emit('audio-channels-changed', this.getAudioChannels())
+      this.emit('master-level-changed', null)
+      this.emit('source-levels-changed', [])
     })
     // atem-connection's own 'levelChanged' event gates on `instanceof
     // Commands.FairlightMixer*LevelsUpdateCommand`, which never matches here
@@ -153,18 +157,26 @@ export class AtemService extends EventEmitter<AtemServiceEvents> {
     }, 2000)
   }
 
+  // atem-connection keeps its last-known state after a disconnect, so every
+  // getter must gate on this rather than on `state` being present.
+  private get isConnected(): boolean {
+    return this.atem.status === AtemLibStatus.CONNECTED
+  }
+
   getStatus(): AtemConnectionStatus {
+    const connected = this.isConnected
     return {
-      connected: this.atem.status === AtemLibStatus.CONNECTED,
+      connected,
       connecting: this.atem.status === AtemLibStatus.CONNECTING,
       ip: this.ip,
       error: this.error,
       deviceInfo: this.getDeviceInfo(),
-      programInput: this.atem.state?.video.mixEffects[0]?.programInput ?? null
+      programInput: connected ? (this.atem.state?.video.mixEffects[0]?.programInput ?? null) : null
     }
   }
 
   getDeviceInfo(): AtemDeviceInfo | null {
+    if (!this.isConnected) return null
     const info = this.atem.state?.info
     if (!info) return null
 
@@ -226,6 +238,7 @@ export class AtemService extends EventEmitter<AtemServiceEvents> {
   }
 
   getInputs(): AtemInputInfo[] {
+    if (!this.isConnected) return []
     const inputs = this.atem.state?.inputs ?? {}
     return Object.values(inputs)
       .filter((input): input is NonNullable<typeof input> => input != null)
@@ -238,7 +251,7 @@ export class AtemService extends EventEmitter<AtemServiceEvents> {
   }
 
   getRecordingStatus(): AtemRecordingStatus {
-    const recording = this.atem.state?.recording
+    const recording = this.isConnected ? this.atem.state?.recording : undefined
     const disks: AtemRecordingDiskInfo[] = Object.values(recording?.disks ?? {})
       .filter((disk): disk is NonNullable<typeof disk> => disk != null)
       .map((disk) => ({
@@ -288,6 +301,7 @@ export class AtemService extends EventEmitter<AtemServiceEvents> {
   }
 
   getAudioChannels(): AtemAudioChannelInfo[] {
+    if (!this.isConnected) return []
     const inputs = this.atem.state?.fairlight?.inputs ?? {}
     return Object.entries(inputs)
       .filter(([key, input]) => input != null && this.isVideoAudioInput(Number(key)))

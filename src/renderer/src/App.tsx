@@ -100,10 +100,8 @@ export default function App() {
     const unsubMidiActivity = window.api.midi.onActivity(setLastMidiActivity)
     const unsubAtemStatus = window.api.atem.onStatusChanged((status) => {
       setAtemStatus(status)
-      if (status.connected) {
-        void window.api.atem.getInputs().then(setAtemInputs)
-        void window.api.atem.getAudioChannels().then(setAudioChannels)
-      }
+      void window.api.atem.getInputs().then(setAtemInputs)
+      void window.api.atem.getAudioChannels().then(setAudioChannels)
     })
     const unsubRecording = window.api.atem.onRecordingChanged(setRecordingStatus)
     const unsubMasterLevel = window.api.atem.onMasterLevelChanged(setMasterLevel)

@@ -22,7 +22,14 @@ export function Footer({ version }: FooterProps) {
         Stacy Gaudreau
       </a>
       <span className="px-1.5">|</span>
-      <span>Issues/Feature requests</span>
+      <a
+        href="https://github.com/stacygaudreau/atem-midi-bridge/issues"
+        target="_blank"
+        rel="noreferrer"
+        className="hover:text-foreground hover:underline"
+      >
+        Issues/Feature requests
+      </a>
     </div>
   )
 }

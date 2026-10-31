@@ -91,6 +91,7 @@ export function RecordingControlCard({
     if (filenameInput !== recordingStatus.filename) onSetFilename(filenameInput)
   }
 
+  const disks = connected ? recordingStatus.disks : []
   const recordingAlert = collapsed && recordingStatus.recording
   const mutedTextClass = recordingAlert ? 'text-destructive-foreground/80' : 'text-muted-foreground'
 
@@ -137,11 +138,17 @@ export function RecordingControlCard({
             </div>
             <div className="flex flex-1 flex-col items-center justify-center gap-0.5 px-4">
               <span className={cn('text-[10px] uppercase tracking-wide', mutedTextClass)}>Duration</span>
-              <span className="text-sm font-semibold leading-none tabular-nums">
-                {formatDuration(recordingStatus.durationSeconds)}
+              <span className={cn('text-sm font-semibold leading-none tabular-nums', !connected && mutedTextClass)}>
+                {connected ? formatDuration(recordingStatus.durationSeconds) : '—'}
               </span>
             </div>
-            {recordingStatus.disks.map((disk) => (
+            {disks.length === 0 && (
+              <div className="flex flex-1 flex-col items-center justify-center gap-0.5 px-4">
+                <span className={cn('text-[10px] uppercase tracking-wide', mutedTextClass)}>Disks</span>
+                <span className={cn('text-sm font-semibold leading-none', mutedTextClass)}>—</span>
+              </div>
+            )}
+            {disks.map((disk) => (
               <div
                 key={disk.id}
                 className="flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-4"
@@ -161,7 +168,13 @@ export function RecordingControlCard({
           <>
             <div className="flex-1" />
             <Badge variant={recordingStatus.recording ? 'destructive' : 'outline'}>
-              {recordingStatus.stopping ? 'Stopping…' : recordingStatus.recording ? 'Recording' : 'Idle'}
+              {!connected
+                ? 'Not connected'
+                : recordingStatus.stopping
+                  ? 'Stopping…'
+                  : recordingStatus.recording
+                    ? 'Recording'
+                    : 'Idle'}
             </Badge>
           </>
         )}
@@ -211,7 +224,7 @@ export function RecordingControlCard({
           <div className="flex w-36 shrink-0 flex-col justify-center gap-1.5 rounded-lg bg-secondary/30 p-4">
             <Label>Duration</Label>
             <div className="flex h-9 items-center text-sm tabular-nums text-muted-foreground">
-              {formatDuration(recordingStatus.durationSeconds)}
+              {connected ? formatDuration(recordingStatus.durationSeconds) : '—'}
             </div>
           </div>
 
@@ -219,7 +232,8 @@ export function RecordingControlCard({
             <Label htmlFor="rec-filename">Filename</Label>
             <Input
               id="rec-filename"
-              value={filenameInput}
+              value={connected ? filenameInput : ''}
+              placeholder={connected ? undefined : 'Not connected'}
               disabled={!connected || filenameLocked}
               onFocus={() => setEditingFilename(true)}
               onChange={(e) => setFilenameInput(e.target.value)}
@@ -233,11 +247,13 @@ export function RecordingControlCard({
 
         <div className="flex flex-col gap-2">
           <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Disks</span>
-          {recordingStatus.disks.length === 0 ? (
+          {!connected ? (
+            <p className="text-sm text-muted-foreground">Connect to the ATEM to see disk info.</p>
+          ) : disks.length === 0 ? (
             <p className="text-sm text-muted-foreground">No disk info.</p>
           ) : (
             <div className="flex flex-col gap-1.5">
-              {recordingStatus.disks.map((disk) => (
+              {disks.map((disk) => (
                 <div
                   key={disk.id}
                   className="grid grid-cols-[auto_auto_1fr_auto_auto] items-center gap-3 rounded-md bg-secondary/40 p-3 text-sm"
