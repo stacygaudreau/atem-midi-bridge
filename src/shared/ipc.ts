@@ -1,0 +1,40 @@
+export const IpcInvoke = {
+  AppGetVersion: 'app:get-version',
+  MidiListPorts: 'midi:list-ports',
+  MidiSelectPort: 'midi:select-port',
+  MidiGetStatus: 'midi:get-status',
+  AtemConnect: 'atem:connect',
+  AtemDisconnect: 'atem:disconnect',
+  AtemGetStatus: 'atem:get-status',
+  AtemGetInputs: 'atem:get-inputs',
+  AtemCut: 'atem:cut',
+  AtemGetRecordingStatus: 'atem:get-recording-status',
+  AtemStartRecording: 'atem:start-recording',
+  AtemStopRecording: 'atem:stop-recording',
+  AtemSetRecordingFilename: 'atem:set-recording-filename',
+  AtemSetRecordAllInputs: 'atem:set-record-all-inputs',
+  AtemSetVideoMode: 'atem:set-video-mode',
+  AtemDiscoveryStart: 'atem:discovery-start',
+  AtemDiscoveryGetDevices: 'atem:discovery-get-devices',
+  AtemDiscoveryRefresh: 'atem:discovery-refresh',
+  AtemGetAudioChannels: 'atem:get-audio-channels',
+  AtemSetAudioChannelGain: 'atem:set-audio-channel-gain',
+  AtemSelectSoloAudioChannel: 'atem:select-solo-audio-channel',
+  MappingsGet: 'mappings:get',
+  MappingsAdd: 'mappings:add',
+  MappingsUpdate: 'mappings:update',
+  MappingsRemove: 'mappings:remove',
+  MappingsSetEnabled: 'mappings:set-enabled'
+} as const
+
+export const IpcEvent = {
+  AtemStatusChanged: 'atem:status-changed',
+  AtemRecordingChanged: 'atem:recording-changed',
+  AtemDiscoveryUpdated: 'atem:discovery-updated',
+  AtemMasterLevelChanged: 'atem:master-level-changed',
+  AtemSourceLevelsChanged: 'atem:source-levels-changed',
+  AtemAudioChannelsChanged: 'atem:audio-channels-changed',
+  MidiStatusChanged: 'midi:status-changed',
+  MidiActivity: 'midi:activity',
+  MappingTriggered: 'mapping:triggered'
+} as const

@@ -1,0 +1,52 @@
+{
+  "name": "atem-midi-bridge",
+  "version": "0.1.0",
+  "description": "MIDI-controlled companion app for Blackmagic ATEM switchers",
+  "main": "./out/main/index.js",
+  "author": "Stacy Gaudreau",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json"
+  },
+  "dependencies": {
+    "@julusian/midi": "^3.8.1",
+    "@radix-ui/react-dialog": "^1.3.1",
+    "@radix-ui/react-label": "^2.1.17",
+    "@radix-ui/react-select": "^2.4.1",
+    "@radix-ui/react-slot": "^1.5.0",
+    "@radix-ui/react-switch": "^1.4.1",
+    "@radix-ui/react-tabs": "^1.2.1",
+    "atem-connection": "^3.10.3",
+    "bonjour-service": "^1.4.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "electron-store": "^12.0.0",
+    "lucide-react": "^1.65.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "electron": "^45.2.0",
+    "electron-builder": "^26.18.0",
+    "electron-vite": "^6.0.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  },
+  "allowScripts": {
+    "@julusian/freetype2@1.3.1": true,
+    "@julusian/midi@3.8.1": true,
+    "electron-winstaller@5.4.0": true
+  }
+}
